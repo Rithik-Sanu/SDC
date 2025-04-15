@@ -1,0 +1,23 @@
+# Install libraries in Google Colab
+!pip install gradio transformers
+
+# Import necessary libraries
+from transformers import pipeline
+import gradio as gr
+
+# Translation model (English to French)
+translator = pipeline("translation_en_to_fr")
+
+# Translation function
+def translate_text(input_text):
+    translation = translator(input_text)
+    return translation[0]['translation_text']
+
+# Gradio interface
+interface = gr.Interface(
+    fn=translate_text,
+    inputs=gr.inputs.Textbox(label="Input Text (English)", lines=2, placeholder="Enter English text"),
+    outputs="text",
+    title="Google Translator (English to French)"
+)
+interface.launch()
