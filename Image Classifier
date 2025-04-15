@@ -1,0 +1,31 @@
+# Install libraries in Google Colab
+!pip install gradio tensorflow
+
+# Import necessary libraries
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
+import gradio as gr
+
+# Create a simplified CNN for binary classification
+model = Sequential([
+    Conv2D(32, (3, 3), activation='relu', input_shape=(64, 64, 3)),
+    MaxPooling2D((2, 2)),
+    Flatten(),
+    Dense(128, activation='relu'),
+    Dense(2, activation='softmax')  # Output for 2 classes (Cats and Dogs)
+])
+model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+
+# Mock prediction function (replace with real model predictions)
+def classify_image(image):
+    return "Cat" if image.sum() % 2 == 0 else "Dog"
+
+# Gradio interface
+interface = gr.Interface(
+    fn=classify_image,
+    inputs=gr.inputs.Image(shape=(64, 64)),
+    outputs="text",
+    title="Cat vs Dog Classifier"
+)
+interface.launch()
