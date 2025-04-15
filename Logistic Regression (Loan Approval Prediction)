@@ -1,0 +1,35 @@
+# Install libraries in Google Colab
+!pip install gradio
+
+# Import necessary libraries
+import numpy as np
+import pandas as pd
+from sklearn.linear_model import LogisticRegression
+import gradio as gr
+
+# Sample loan data
+data = {
+    'Income': [3000, 4000, 5000, 6000, 7000],
+    'Loan_Status': [0, 0, 1, 1, 1]  # 0 = Rejected, 1 = Approved
+}
+df = pd.DataFrame(data)
+
+# Logistic regression model
+model = LogisticRegression()
+X = df[['Income']]
+y = df['Loan_Status']
+model.fit(X, y)
+
+# Prediction function
+def predict_loan_status(income):
+    status = model.predict([[income]])
+    return "Approved" if status[0] == 1 else "Rejected"
+
+# Gradio interface
+interface = gr.Interface(
+    fn=predict_loan_status,
+    inputs=gr.inputs.Number(label="Income (in USD)"),
+    outputs="text",
+    title="Loan Approval Predictor"
+)
+interface.launch()
