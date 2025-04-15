@@ -1,0 +1,23 @@
+# Install libraries in Google Colab
+!pip install gradio transformers
+
+# Import necessary libraries
+from transformers import pipeline
+import gradio as gr
+
+# Load summarization model
+summarizer = pipeline("summarization")
+
+# Summarization function
+def summarize_text(input_text):
+    summary = summarizer(input_text, max_length=50, min_length=25, do_sample=False)
+    return summary[0]['summary_text']
+
+# Gradio interface
+interface = gr.Interface(
+    fn=summarize_text,
+    inputs=gr.inputs.Textbox(label="Input Text", lines=5, placeholder="Paste your text here"),
+    outputs="text",
+    title="Text Summarizer"
+)
+interface.launch()
