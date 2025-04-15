@@ -1,0 +1,35 @@
+# Install libraries in Google Colab
+!pip install gradio
+
+# Import necessary libraries
+import numpy as np
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+import gradio as gr
+
+# Sample housing data
+data = {
+    'Square_Feet': [750, 800, 850, 900, 950],
+    'Price': [150000, 160000, 170000, 180000, 190000]
+}
+df = pd.DataFrame(data)
+
+# Linear regression model
+model = LinearRegression()
+X = df[['Square_Feet']]
+y = df['Price']
+model.fit(X, y)
+
+# Prediction function
+def predict_price(square_feet):
+    price = model.predict([[square_feet]])
+    return f"Predicted Price: ${price[0]:,.2f}"
+
+# Gradio interface
+interface = gr.Interface(
+    fn=predict_price,
+    inputs=gr.inputs.Number(label="Square Feet"),
+    outputs="text",
+    title="Housing Price Predictor"
+)
+interface.launch()
